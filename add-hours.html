@@ -7,35 +7,45 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+    <!-- Navbar -->
     <div id="navbar">
         <a href="index.html">Login</a>
         <a href="add-hours.html">Add Hours</a>
-        <a href="add-edit-employees.html">Add/Edit Employees</a>
+        <a href="add-employees.html">Add/Edit Employees</a>
         <a href="run-payroll.html">Run Payroll</a>
-        <button onclick="logout()">Logout</button>
     </div>
 
-    <h2>Add Hours</h2>
-    
-    <!-- Date Picker (Pre-populated with today's date) -->
-    <input type="date" id="dateInput" />
+    <!-- Add Hours Content -->
+    <div class="container">
+        <h2>Add Hours</h2>
+        <form id="add-hours-form">
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" value="" required>
+            
+            <!-- Employee Attendance Table -->
+            <table id="attendance-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Absent</th>
+                        <th>Clock In</th>
+                        <th>Clock Out</th>
+                        <th>Total Hours</th>
+                        <th>Submit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Rows will be dynamically added by JavaScript -->
+                </tbody>
+            </table>
+            
+            <button type="button" onclick="updateAllRows()">Update All</button>
+        </form>
+    </div>
 
-    <h3>Employee Attendance</h3>
-    <table id="attendance-table">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Absent</th>
-                <th>Clock In</th>
-                <th>Clock Out</th>
-                <th>Total Hours</th>
-            </tr>
-        </thead>
-        <tbody>
-            <!-- Employee rows will be inserted here dynamically -->
-        </tbody>
-    </table>
-
+    <script type="module" src="app.js"></script>
     <script type="module" src="add-hours.js"></script>
+
 </body>
 </html>
