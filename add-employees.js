@@ -1,82 +1,68 @@
-// Firebase Configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyCuQwsqL_sOYHHlzsqUyg-dnTPtNh8Kp1s",
-    authDomain: "employeemanagement-28132.firebaseapp.com",
-    projectId: "employeemanagement-28132",
-    storageBucket: "employeemanagement-28132.firebasestorage.app",
-    messagingSenderId: "20059564448",
-    appId: "1:20059564448:web:c0711f370a68d4eaa89cc5",
-    measurementId: "G-D2S9RGW84N"
-};
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add/Edit Employees</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="navbar">
+        <a href="index.html">Login</a>
+        <a href="add-hours.html">Add Hours</a>
+        <a href="add-edit-employees.html">Add/Edit Employees</a>
+        <a href="run-payroll.html">Run Payroll</a>
+        <button onclick="logout()">Logout</button>
+    </div>
 
-// Import Firebase SDK v9+ using ES Modules
-import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-// Function to load employees
-async function loadEmployees() {
-    const employeeTable = document.getElementById("employee-table").getElementsByTagName("tbody")[0];
-    const employeesSnapshot = await getDocs(collection(db, "employees"));
+    <h2>Add/Edit Employees</h2>
     
-    employeesSnapshot.forEach((doc) => {
-        const employee = doc.data();
-        const row = employeeTable.insertRow();
-        
-        row.innerHTML = `
-            <td>${employee.name}</td>
-            <td>${employee.position}</td>
-            <td>${employee.company}</td>
-            <td>${employee.active ? 'Yes' : 'No'}</td>
-            <td>${employee.hireDate || 'N/A'}</td>
-        `;
-    });
-}
+    <!-- Button to show Add Employee form -->
+    <button id="showAddEmployeeBtn">Add Employee</button>
 
-// Function to show the Add Employee form
-function showAddEmployeeForm() {
-    document.getElementById("addEmployeeForm").style.display = "block";
-}
+    <!-- Add Employee Form (hidden by default) -->
+    <div id="addEmployeeForm" style="display:none;">
+        <h3>New Employee</h3>
+        <form id="employeeForm">
+            <label for="employeeName">Name:</label>
+            <input type="text" id="employeeName" required /><br><br>
 
-// Function to hide the Add Employee form
-function hideAddEmployeeForm() {
-    document.getElementById("addEmployeeForm").style.display = "none";
-}
+            <label for="employeePosition">Position:</label>
+            <input type="text" id="employeePosition" required /><br><br>
 
-// Function to add a new employee to Firestore
-async function addEmployee() {
-    const name = document.getElementById('employeeName').value;
-    const position = document.getElementById('employeePosition').value;
-    const company = document.getElementById('employeeCompany').value;
-    const active = document.getElementById('employeeActive').value === 'true';
-    const hireDate = document.getElementById('employeeHireDate').value;
+            <label for="employeeCompany">Company:</label>
+            <input type="text" id="employeeCompany" required /><br><br>
 
-    // Add employee to Firestore collection
-    await addDoc(collection(db, "employees"), {
-        name,
-        position,
-        company,
-        active,
-        hireDate: hireDate || null, // Optional field
-    });
+            <label for="employeeActive">Active:</label>
+            <select id="employeeActive" required>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+            </select><br><br>
 
-    // Reload the employee list after adding a new one
-    loadEmployees();
+            <label for="employeeHireDate">Hire Date:</label>
+            <input type="date" id="employeeHireDate" /><br><br>
 
-    // Clear form inputs
-    document.getElementById('employeeForm').reset();
+            <button type="button" id="addEmployeeBtn">Add Employee</button>
+            <button type="button" onclick="hideAddEmployeeForm()">Cancel</button>
+        </form>
+    </div>
 
-    // Hide the form
-    hideAddEmployeeForm();
-}
+    <h3>Employee List</h3>
+    <table id="employee-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Company</th>
+                <th>Active</th>
+                <th>Hire Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Employee rows will be added here dynamically -->
+        </tbody>
+    </table>
 
-// Load employees when the page is loaded
-window.onload = () => {
-    loadEmployees();
-    
-    // Adding event listener for the "Add Employee" button
-    document.getElementById("showAddEmployeeBtn").addEventListener("click", showAddEmployeeForm);
-};
+    <script type="module" src="add-employees.js"></script>
+</body>
+</html>
