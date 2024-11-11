@@ -32,7 +32,7 @@ function signIn() {
       console.log("Signed in as:", user.email);
 
       // Check if user is admin (example: check if email is admin)
-      if (user.email === "admin@yourcompany.com") { // Replace with your admin email or logic
+      if (user.email === "slazar@valmarsurgical.com") { // Replace with your admin email or logic
         showAdminView(); // Function to show admin's UI
       } else {
         showEmployeeView(); // Function to show employee's UI
