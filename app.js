@@ -1,3 +1,8 @@
+// Import Firebase SDK modules
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js';
+import { getAuth, signInWithEmailAndPassword, signOut } from 'https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js';
+import { getFirestore, collection, getDocs } from 'https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js';
+
 // Firebase Configuration
 const firebaseConfig = {
     apiKey: "AIzaSyCuQwsqL_sOYHHlzsqUyg-dnTPtNh8Kp1s",
@@ -10,16 +15,16 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
-const auth = firebase.getAuth(app);
-const db = firebase.getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
 
 // Function to handle login
 function login() {
     const email = document.getElementById('emailInput').value;
     const password = document.getElementById('passwordInput').value;
 
-    firebase.signInWithEmailAndPassword(auth, email, password)
+    signInWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
             const user = userCredential.user;
             window.location.href = 'add-hours.html';  // Redirect to Add Hours page
@@ -32,7 +37,7 @@ function login() {
 // Load employees and attendance for Add Hours page
 async function loadEmployeeAttendance() {
     const employeeTable = document.getElementById("attendance-table").getElementsByTagName("tbody")[0];
-    const employeesSnapshot = await firebase.getDocs(firebase.collection(db, "employees"));
+    const employeesSnapshot = await getDocs(collection(db, "employees"));
     
     employeesSnapshot.forEach((doc) => {
         const employee = doc.data();
@@ -51,13 +56,13 @@ async function loadEmployeeAttendance() {
 // Load employees for Add/Edit Employees page
 async function loadEmployees() {
     const employeeTable = document.getElementById("employee-table").getElementsByTagName("tbody")[0];
-    const employeesSnapshot = await firebase.getDocs(firebase.collection(db, "employees"));
+    const employeesSnapshot = await getDocs(collection(db, "employees"));
     
     employeesSnapshot.forEach((doc) => {
         const employee = doc.data();
         const row = employeeTable.insertRow();
         
-        row.innerHTML = `
+        row.innerHTML = ` 
             <td>${employee.name}</td>
             <td>${employee.position}</td>
             <td>${employee.company}</td>
@@ -99,7 +104,7 @@ function generatePayroll() {
 
 // Logout function to return to the login page
 function logout() {
-    firebase.signOut(auth).then(() => {
+    signOut(auth).then(() => {
         window.location.href = 'index.html'; // Redirect to login page
     });
 }
