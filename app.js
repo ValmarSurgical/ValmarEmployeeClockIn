@@ -30,6 +30,7 @@ function signIn() {
     .then((userCredential) => {
       const user = userCredential.user;
       console.log("Signed in as:", user.email);
+      showAdminDashboard(); // Automatically show admin dashboard after login
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -73,6 +74,13 @@ function loadDashboard() {
   `;
   dashboardContent.appendChild(table);
   loadEmployeeAttendance();
+
+  // Add functionality to calculate total hours when clock-in/clock-out is changed
+  document.getElementById("attendance-table").addEventListener("input", (event) => {
+    if (event.target.name === "clock-in" || event.target.name === "clock-out") {
+      calculateTotalHours(event.target);
+    }
+  });
 }
 
 // Load Employee Attendance
@@ -92,6 +100,30 @@ async function loadEmployeeAttendance() {
       <td><input type="number" name="total-hours" value="0" readonly></td>
     `;
   });
+}
+
+// Calculate Total Hours (clock-in/clock-out)
+function calculateTotalHours(target) {
+  const row = target.closest('tr');
+  const clockInInput = row.querySelector('input[name="clock-in"]');
+  const clockOutInput = row.querySelector('input[name="clock-out"]');
+  const totalHoursInput = row.querySelector('input[name="total-hours"]');
+
+  if (clockInInput.value && clockOutInput.value) {
+    const clockIn = new Date(`1970-01-01T${clockInInput.value}:00`);
+    const clockOut = new Date(`1970-01-01T${clockOutInput.value}:00`);
+    
+    let totalHours = (clockOut - clockIn) / (1000 * 60 * 60); // Convert milliseconds to hours
+    
+    if (totalHours < 0) {
+      totalHours += 24; // Handle if clock-out is after midnight
+    }
+    
+    totalHours -= 0.5; // Subtract 30 minutes for lunch
+    totalHoursInput.value = totalHours.toFixed(2); // Set total hours (rounded to 2 decimals)
+  } else {
+    totalHoursInput.value = 0;
+  }
 }
 
 // Admin features (Add/Edit employee, Payroll, etc.) will be added below
