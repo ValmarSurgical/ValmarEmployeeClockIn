@@ -9,14 +9,18 @@ const firebaseConfig = {
     measurementId: "G-D2S9RGW84N"
 };
 
+// Import Firebase SDK v9+ using ES Modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+import { getFirestore, collection, getDocs, addDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
 // Initialize Firebase
-const app = firebase.initializeApp(firebaseConfig);
-const db = firebase.getFirestore(app);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 // Function to load employees
 async function loadEmployees() {
     const employeeTable = document.getElementById("employee-table").getElementsByTagName("tbody")[0];
-    const employeesSnapshot = await firebase.getDocs(firebase.collection(db, "employees"));
+    const employeesSnapshot = await getDocs(collection(db, "employees"));
     
     employeesSnapshot.forEach((doc) => {
         const employee = doc.data();
@@ -51,7 +55,7 @@ async function addEmployee() {
     const hireDate = document.getElementById('employeeHireDate').value;
 
     // Add employee to Firestore collection
-    await firebase.addDoc(firebase.collection(db, "employees"), {
+    await addDoc(collection(db, "employees"), {
         name,
         position,
         company,
