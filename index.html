@@ -3,68 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Admin Login</title>
 </head>
 <body>
-    <!-- Login Form -->
-    <div id="login-form">
-        <input type="email" id="emailInput" placeholder="Email" required />
-        <input type="password" id="passwordInput" placeholder="Password" required />
-        <button id="signInButton">Sign In</button>
-    </div>
-
-    <!-- Admin Dashboard (Hidden until sign-in) -->
-    <div id="admin-dashboard" style="display:none;">
-        <h2>Welcome, Admin</h2>
-        
-        <!-- Navigation buttons to other screens -->
-        <button id="goToAddEditEmployees">Add/Edit Employees</button>
-        <button id="goToPayroll">Run Payroll</button>
-        
-        <!-- Dashboard Content -->
-        <div id="dashboard-content"></div>
-    </div>
-
-    <!-- Add/Edit Employees Screen (Initially Hidden) -->
-    <div id="employee-management" style="display:none;">
-        <h3>Add/Edit Employees</h3>
-        <!-- Employee management content goes here -->
-        <table id="employee-table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Position</th>
-                    <th>Company</th>
-                    <th>Active</th>
-                    <th>Hire Date</th>
-                </tr>
-            </thead>
-            <tbody></tbody>
-        </table>
-        <button id="backToDashboardFromEmployee">Back to Dashboard</button>
-    </div>
-
-    <!-- Payroll Screen (Initially Hidden) -->
-    <div id="payroll" style="display:none;">
-        <h3>Run Payroll</h3>
-        <!-- Payroll content goes here -->
-        <form id="payroll-form">
-            <label>From Date:</label>
-            <input type="date" id="fromDate" required />
-            <label>To Date:</label>
-            <input type="date" id="toDate" required />
-            <button type="submit">Generate Payroll</button>
-        </form>
-        <button id="backToDashboardFromPayroll">Back to Dashboard</button>
-    </div>
+    <h2>Admin Login</h2>
+    <input type="email" id="emailInput" placeholder="Email" required />
+    <input type="password" id="passwordInput" placeholder="Password" required />
+    <button id="signInButton">Sign In</button>
 
     <!-- Import Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 
-    <!-- Your custom JavaScript -->
-    <script type="module" src="app.js"></script>
+    <script type="module" src="login.js"></script>
 </body>
 </html>
