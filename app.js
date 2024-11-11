@@ -32,11 +32,11 @@ function signIn() {
       console.log("Signed in as:", user.email);
 
       // Check if user is admin
-      if (user.email === "slazar@valmarsurgical.com") { // Replace with your admin email
+      //if (user.email === "slazar@valmarsurgical.com") { // Replace with your admin email
         showAdminDashboard(); // Function to show admin's UI
-      } else {
-        alert("Access denied! You are not an admin.");
-      }
+      //} else {
+      //  alert("Access denied! You are not an admin.");
+      //}
     })
     .catch((error) => {
       const errorCode = error.code;
