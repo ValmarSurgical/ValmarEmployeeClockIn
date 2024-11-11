@@ -23,9 +23,10 @@
 
     <script>
         // Ensure the login function is accessible in the HTML file
-        document.getElementById('signInButton').addEventListener('click', () => {
-            login(); // Call the login function from app.js
-        });
+        import { login } from './app.js'; // Import login function from app.js
+        
+        // Add event listener for the login button
+        document.getElementById('signInButton').addEventListener('click', login); // Call the login function on button click
     </script>
 </body>
 </html>
