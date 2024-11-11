@@ -1,8 +1,8 @@
-// Import the necessary Firebase modules
+// Import Firebase modules
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
 import { getFirestore, collection, getDocs, doc, updateDoc } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 
-// Your Firebase configuration
+// Firebase configuration
 const firebaseConfig = {
     apiKey: "AIzaSyCuQwsqL_sOYHHlzsqUyg-dnTPtNh8Kp1s",
     authDomain: "employeemanagement-28132.firebaseapp.com",
@@ -14,24 +14,21 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig); // Initialize Firebase App
-const db = getFirestore(app); // Initialize Firestore
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
-// Load Employee Attendance
+// Load employees for attendance
 async function loadEmployeeAttendance() {
     const employeeTable = document.getElementById("attendance-table").getElementsByTagName("tbody")[0];
     const employeesSnapshot = await getDocs(collection(db, "employees"));
     
     employeesSnapshot.forEach((doc) => {
         const employee = doc.data();
-        if (!employee.active) return;  // Skip inactive employees
+        if (!employee.active) return;
 
         const row = employeeTable.insertRow();
+        const attendanceData = employee.attendance || {};
 
-        // Check if the employee has clock-in and clock-out data
-        const attendanceData = employee.attendance || {};  // Assuming "attendance" contains clock-in and clock-out data
-
-        // Add the row for each employee
         row.innerHTML = `
             <td>${employee.name}</td>
             <td><input type="checkbox" name="absent" value="Yes" ${attendanceData.absent ? 'checked' : ''} onchange="toggleClockInOut(this)"></td>
@@ -43,7 +40,7 @@ async function loadEmployeeAttendance() {
     });
 }
 
-// Calculate Total Hours (Clock Out - Clock In - 30 minutes)
+// Function to calculate total hours based on clock-in and clock-out times
 function calculateHours(input) {
     const row = input.closest("tr");
     const clockIn = row.querySelector('[name="clock-in"]').value;
@@ -51,7 +48,6 @@ function calculateHours(input) {
     const absentCheckbox = row.querySelector('[name="absent"]');
     const totalHoursInput = row.querySelector('[name="total-hours"]');
 
-    // If either clock-in or clock-out is missing, we don't calculate hours
     if (clockIn && clockOut && !absentCheckbox.checked) {
         const clockInTime = new Date(`1970-01-01T${clockIn}:00`);
         const clockOutTime = new Date(`1970-01-01T${clockOut}:00`);
@@ -62,7 +58,7 @@ function calculateHours(input) {
     }
 }
 
-// Disable Clock In/Out when Absent is checked
+// Disable clock-in and clock-out fields if absent is checked
 function toggleClockInOut(checkbox) {
     const row = checkbox.closest("tr");
     const clockIn = row.querySelector('[name="clock-in"]');
@@ -77,7 +73,7 @@ function toggleClockInOut(checkbox) {
     }
 }
 
-// Update a single row
+// Update a specific row in the Firestore database
 async function updateRow(button) {
     const row = button.closest("tr");
     const name = row.querySelector('td').textContent;
@@ -109,7 +105,7 @@ async function updateAllRows() {
         const clockOut = row.querySelector('[name="clock-out"]').value;
         const totalHours = row.querySelector('[name="total-hours"]').value;
 
-        const employeeRef = doc(db, "employees", name); // Assuming employee names are unique
+        const employeeRef = doc(db, "employees", name);
         await updateDoc(employeeRef, {
             attendance: {
                 absent,
@@ -123,8 +119,8 @@ async function updateAllRows() {
     }
 }
 
-// Initialize the page
+// Prepopulate the date field with today's date
 window.onload = function() {
-    document.getElementById("date").value = new Date().toISOString().split("T")[0]; // Prepopulate the date field
-    loadEmployeeAttendance(); // Load the employees into the table
+    document.getElementById("date").value = new Date().toISOString().split("T")[0];
+    loadEmployeeAttendance(); // Load the employee attendance into the table
 };
