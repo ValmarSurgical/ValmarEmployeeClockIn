@@ -74,4 +74,9 @@ async function addEmployee() {
 }
 
 // Load employees when the page is loaded
-window.onload = loadEmployees;
+window.onload = () => {
+    loadEmployees();
+    
+    // Adding event listener for the "Add Employee" button
+    document.getElementById("showAddEmployeeBtn").addEventListener("click", showAddEmployeeForm);
+};
