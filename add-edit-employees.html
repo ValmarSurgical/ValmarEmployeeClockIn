@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add/Edit Employees</title>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="add-hours.html">Add Hours</a> |
+        <a href="add-edit-employees.html">Add/Edit Employees</a> |
+        <a href="run-payroll.html">Run Payroll</a>
+    </nav>
+
+    <h2>Add/Edit Employees</h2>
+    <!-- Content for adding/editing employees -->
+    <table id="employee-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Company</th>
+                <th>Active</th>
+                <th>Hire Date</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <!-- Import Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+
+    <script type="module" src="add-edit-employees.js"></script>
+</body>
+</html>
