@@ -1,21 +1,7 @@
-// Initialize Firebase
-const firebaseConfig = {
-    apiKey: "AIzaSyCuQwsqL_sOYHHlzsqUyg-dnTPtNh8Kp1s",
-    authDomain: "employeemanagement-28132.firebaseapp.com",
-    projectId: "employeemanagement-28132",
-    storageBucket: "employeemanagement-28132.firebasestorage.app",
-    messagingSenderId: "20059564448",
-    appId: "1:20059564448:web:c0711f370a68d4eaa89cc5",
-    measurementId: "G-D2S9RGW84N"
-};
-const app = firebase.initializeApp(firebaseConfig);
-const auth = firebase.getAuth(app);
-const db = firebase.getFirestore(app);
-
 // Load Employee Attendance
 async function loadEmployeeAttendance() {
     const employeeTable = document.getElementById("attendance-table").getElementsByTagName("tbody")[0];
-    const employeesSnapshot = await firebase.getDocs(firebase.collection(db, "employees"));
+    const employeesSnapshot = await firebase.firestore().collection("employees").get();
     
     employeesSnapshot.forEach((doc) => {
         const employee = doc.data();
@@ -81,8 +67,8 @@ async function updateRow(button) {
     const clockOut = row.querySelector('[name="clock-out"]').value;
     const totalHours = row.querySelector('[name="total-hours"]').value;
 
-    const employeeRef = firebase.doc(db, "employees", name); // Assuming employee names are unique
-    await firebase.updateDoc(employeeRef, {
+    const employeeRef = firebase.firestore().doc("employees", name); // Assuming employee names are unique
+    await firebase.firestore().updateDoc(employeeRef, {
         attendance: {
             absent,
             clockIn,
@@ -104,8 +90,8 @@ async function updateAllRows() {
         const clockOut = row.querySelector('[name="clock-out"]').value;
         const totalHours = row.querySelector('[name="total-hours"]').value;
 
-        const employeeRef = firebase.doc(db, "employees", name); // Assuming employee names are unique
-        await firebase.updateDoc(employeeRef, {
+        const employeeRef = firebase.firestore().doc("employees", name); // Assuming employee names are unique
+        await firebase.firestore().updateDoc(employeeRef, {
             attendance: {
                 absent,
                 clockIn,
