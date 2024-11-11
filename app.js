@@ -12,14 +12,14 @@ const firebaseConfig = {
 // Import Firebase SDK v9+ using ES Modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-import { getFirestore, collection, addDoc, getDocs, serverTimestamp, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 
-// Admin Login
+// Sign In Function
 document.getElementById('signInButton').addEventListener('click', signIn);
 
 function signIn() {
@@ -30,24 +30,23 @@ function signIn() {
     .then((userCredential) => {
       const user = userCredential.user;
       console.log("Signed in as:", user.email);
-      showAdminDashboard(); // Automatically show admin dashboard after login
+      showAdminDashboard();  // Show the dashboard after login
     })
     .catch((error) => {
-      const errorCode = error.code;
       const errorMessage = error.message;
-      console.log("Error signing in:", errorCode, errorMessage);
+      console.log("Error signing in:", errorMessage);
       alert("Login failed: " + errorMessage); // Show error message
     });
 }
 
-// Show Admin Dashboard after login
+// Show Admin Dashboard
 function showAdminDashboard() {
   document.getElementById("login-form").style.display = "none";
   document.getElementById("admin-dashboard").style.display = "block";
   loadDashboard();
 }
 
-// Load Dashboard Content
+// Load Dashboard Content (Date Field and Attendance Table)
 function loadDashboard() {
   const dashboardContent = document.getElementById("dashboard-content");
   
@@ -76,7 +75,7 @@ function loadDashboard() {
   loadEmployeeAttendance();
 }
 
-// Load Employee Attendance
+// Load Employee Attendance (for the table)
 async function loadEmployeeAttendance() {
   const employeeTable = document.getElementById("attendance-table").getElementsByTagName("tbody")[0];
   const employeesSnapshot = await getDocs(collection(db, "employees"));
@@ -95,43 +94,43 @@ async function loadEmployeeAttendance() {
   });
 }
 
-// Navigate to Add/Edit Employees Screen
-document.getElementById('goToAddEditEmployees').addEventListener('click', function() {
+// Navigation between screens
+document.getElementById("goToAddEditEmployees").addEventListener("click", showAddEditEmployees);
+document.getElementById("goToPayroll").addEventListener("click", showPayroll);
+document.getElementById("backToDashboardFromEmployee").addEventListener("click", showAdminDashboard);
+document.getElementById("backToDashboardFromPayroll").addEventListener("click", showAdminDashboard);
+
+// Show Add/Edit Employees Screen
+function showAddEditEmployees() {
   document.getElementById("admin-dashboard").style.display = "none";
   document.getElementById("employee-management").style.display = "block";
   loadEmployeeManagement();
-});
-
-// Navigate to Payroll Screen
-document.getElementById('goToPayroll').addEventListener('click', function() {
-  document.getElementById("admin-dashboard").style.display = "none";
-  document.getElementById("payroll").style.display = "block";
-});
-
-// Go Back to Dashboard from Employee Management
-document.getElementById('backToDashboardFromEmployee').addEventListener('click', function() {
-  document.getElementById("employee-management").style.display = "none";
-  document.getElementById("admin-dashboard").style.display = "block";
-});
-
-// Go Back to Dashboard from Payroll
-document.getElementById('backToDashboardFromPayroll').addEventListener('click', function() {
-  document.getElementById("payroll").style.display = "none";
-  document.getElementById("admin-dashboard").style.display = "block";
-});
-
-// Load Employee Management (Add/Edit Employees)
-function loadEmployeeManagement() {
-  const employeeTable = document.getElementById("employee-table").getElementsByTagName("tbody")[0];
-  // Here you can add functionality to display, edit, or add employees.
-  // (This would require getting data from Firestore and updating/additional inputs to create/edit employees.)
 }
 
-// Payroll functionality (To be added in future, handle form submission for payroll generation)
-document.getElementById('payroll-form').addEventListener('submit', function(event) {
-  event.preventDefault();
-  const fromDate = document.getElementById('fromDate').value;
-  const toDate = document.getElementById('toDate').value;
-  console.log("Generating payroll for", fromDate, "to", toDate);
-  // Add the payroll generation logic here (e.g., calculate total hours for the given date range)
-});
+// Load Employees in Add/Edit Section
+async function loadEmployeeManagement() {
+  const employeeTable = document.getElementById("employee-table").getElementsByTagName("tbody")[0];
+  const employeesSnapshot = await getDocs(collection(db, "employees"));
+  
+  employeesSnapshot.forEach((doc) => {
+    const employee = doc.data();
+    const row = employeeTable.insertRow();
+    
+    row.innerHTML = `
+      <td>${employee.name}</td>
+      <td>${employee.position}</td>
+      <td>${employee.company}</td>
+      <td><input type="checkbox" ${employee.active ? "checked" : ""} disabled></td>
+      <td>${employee.hireDate ? employee.hireDate : "N/A"}</td>
+    `;
+  });
+}
+
+// Show Payroll Screen
+function showPayroll() {
+  document.getElementById("admin-dashboard").style.display = "none";
+  document.getElementById("payroll").style.display = "block";
+}
+
+// Add/Edit Employee Logic (Not implemented yet)
+// Payroll Logic (Not implemented yet)
