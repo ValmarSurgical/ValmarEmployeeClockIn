@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Clock-In and Payroll System</title>
+    <link rel="stylesheet" href="style.css">
+    <script defer src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script defer src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+    <script defer src="script.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Employee Clock-In and Payroll System</h1>
+        
+        <!-- Login Form -->
+        <div id="login-form">
+            <h2>Employee Login</h2>
+            <input type="email" id="email" placeholder="Email">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="signIn()">Sign In</button>
+        </div>
+
+        <!-- Clock-In/Out Area -->
+        <div id="clock-area" style="display: none;">
+            <h2>Welcome, <span id="employee-name"></span></h2>
+            <button onclick="clockIn()">Clock In</button>
+            <button onclick="clockOut()">Clock Out</button>
+            <button onclick="signOut()">Sign Out</button>
+        </div>
+
+        <!-- Admin Area -->
+        <div id="admin-area" style="display: none;">
+            <h2>Admin Panel</h2>
+            <input type="text" id="employee-name-input" placeholder="Employee Name">
+            <input type="email" id="employee-email-input" placeholder="Employee Email">
+            <input type="number" id="employee-rate-input" placeholder="Hourly Rate">
+            <button onclick="addEmployee()">Add Employee</button>
+
+            <h3>Payroll Calculation</h3>
+            <input type="text" id="payroll-employee-id" placeholder="Employee ID">
+            <button onclick="calculatePayroll()">Calculate Payroll</button>
+        </div>
+    </div>
+</body>
+</html>
