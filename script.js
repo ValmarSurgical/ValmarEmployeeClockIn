@@ -1,9 +1,4 @@
-// Import the functions you need from the Firebase SDK
-import { initializeApp } from "firebase/app";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
-import { getFirestore, collection, addDoc, query, where, getDocs, serverTimestamp, doc, updateDoc } from "firebase/firestore";
-
-// Your web app's Firebase configuration
+// Firebase Configuration
 const firebaseConfig = {
   apiKey: "AIzaSyCuQwsqL_sOYHHlzsqUyg-dnTPtNh8Kp1s",
   authDomain: "employeemanagement-28132.firebaseapp.com",
@@ -14,26 +9,28 @@ const firebaseConfig = {
   measurementId: "G-D2S9RGW84N"
 };
 
+// Import Firebase SDK v9+ using ES Modules
+import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
+import { getFirestore, collection, addDoc, query, where, getDocs, serverTimestamp, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app); // Firebase Authentication instance
-const db = getFirestore(app); // Firestore instance
+const auth = getAuth(app);
+const db = getFirestore(app);
 
-// Sign-in function
+// Sign In Function
 document.getElementById('signInButton').addEventListener('click', signIn);
 
 function signIn() {
   const email = document.getElementById('emailInput').value;
   const password = document.getElementById('passwordInput').value;
 
-  // Firebase sign-in (v9 syntax)
   signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
-      // Signed in
       const user = userCredential.user;
       console.log("Signed in as:", user.email);
-      // Redirect or show logged-in UI
-      window.location.href = "dashboard.html"; // or another page
+      window.location.href = "dashboard.html"; // Or redirect to another page
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -43,7 +40,20 @@ function signIn() {
     });
 }
 
-// Clock In function
+// Add Employee function (Admin only)
+async function addEmployee() {
+  const name = document.getElementById("employee-name-input").value;
+  const email = document.getElementById("employee-email-input").value;
+  const hourlyRate = parseFloat(document.getElementById("employee-rate-input").value);
+  await addDoc(collection(db, "employees"), {
+    name: name,
+    email: email,
+    hourlyRate: hourlyRate
+  });
+  alert("Employee added!");
+}
+
+// Clock In/Out function
 async function clockIn() {
   const timestamp = serverTimestamp();
   const userId = auth.currentUser.uid;
@@ -55,7 +65,6 @@ async function clockIn() {
   alert("Clock-in recorded!");
 }
 
-// Clock Out function
 async function clockOut() {
   const userId = auth.currentUser.uid;
   const clockOutTime = serverTimestamp();
@@ -77,20 +86,7 @@ async function clockOut() {
   }
 }
 
-// Add Employee function (Admin only)
-async function addEmployee() {
-  const name = document.getElementById("employee-name-input").value;
-  const email = document.getElementById("employee-email-input").value;
-  const hourlyRate = parseFloat(document.getElementById("employee-rate-input").value);
-  await addDoc(collection(db, "employees"), {
-    name: name,
-    email: email,
-    hourlyRate: hourlyRate
-  });
-  alert("Employee added!");
-}
-
-// Calculate Payroll function (Admin only)
+// Calculate Payroll (Admin only)
 async function calculatePayroll() {
   const employeeId = document.getElementById("payroll-employee-id").value;
   const records = await getDocs(query(
@@ -104,7 +100,7 @@ async function calculatePayroll() {
   records.forEach((record) => {
     const clockIn = record.data().clockIn.toDate();
     const clockOut = record.data().clockOut.toDate();
-    const hoursWorked = (clockOut - clockIn) / (1000 * 60 * 60); // Convert ms to hours
+    const hoursWorked = (clockOut - clockIn) / (1000 * 60 * 60);
     totalHours += hoursWorked;
   });
 
@@ -114,4 +110,3 @@ async function calculatePayroll() {
 
   alert(`Weekly payroll for ${employee.data().name}: $${weeklyPay.toFixed(2)}`);
 }
-
