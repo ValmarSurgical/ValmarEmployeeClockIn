@@ -1,7 +1,13 @@
+// Import Firestore and Firebase methods
+import { getFirestore, collection, getDocs, doc, updateDoc } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
+
+// Initialize Firestore
+const db = getFirestore();
+
 // Load Employee Attendance
 async function loadEmployeeAttendance() {
     const employeeTable = document.getElementById("attendance-table").getElementsByTagName("tbody")[0];
-    const employeesSnapshot = await firebase.firestore().collection("employees").get();
+    const employeesSnapshot = await getDocs(collection(db, "employees"));
     
     employeesSnapshot.forEach((doc) => {
         const employee = doc.data();
@@ -67,8 +73,8 @@ async function updateRow(button) {
     const clockOut = row.querySelector('[name="clock-out"]').value;
     const totalHours = row.querySelector('[name="total-hours"]').value;
 
-    const employeeRef = firebase.firestore().doc("employees", name); // Assuming employee names are unique
-    await firebase.firestore().updateDoc(employeeRef, {
+    const employeeRef = doc(db, "employees", name); // Assuming employee names are unique
+    await updateDoc(employeeRef, {
         attendance: {
             absent,
             clockIn,
@@ -90,8 +96,8 @@ async function updateAllRows() {
         const clockOut = row.querySelector('[name="clock-out"]').value;
         const totalHours = row.querySelector('[name="total-hours"]').value;
 
-        const employeeRef = firebase.firestore().doc("employees", name); // Assuming employee names are unique
-        await firebase.firestore().updateDoc(employeeRef, {
+        const employeeRef = doc(db, "employees", name); // Assuming employee names are unique
+        await updateDoc(employeeRef, {
             attendance: {
                 absent,
                 clockIn,
