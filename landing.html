@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Dashboard</title>
+    <script type="module" src="landing.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="landing-page">
+        <h2>Employee Attendance</h2>
+        <input type="date" id="dateInput" value="" />
+        <table id="employeeTable">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Absent</th>
+                    <th>Clock In</th>
+                    <th>Clock Out</th>
+                    <th>Total Hours</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Employee rows will be populated here -->
+            </tbody>
+        </table>
+        <button onclick="updateEmployees()">Update Employees</button>
+        <button onclick="updateMultipleEmployees()">Update Multiple Employees</button>
+    </div>
+</body>
+</html>
