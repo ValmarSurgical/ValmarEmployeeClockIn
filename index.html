@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Login Form -->
+    <div id="login-form">
+        <h2>Admin Login</h2>
+        <input type="email" id="emailInput" placeholder="Enter your email" required>
+        <input type="password" id="passwordInput" placeholder="Enter your password" required>
+        <button id="signInButton">Sign In</button>
+    </div>
+
+    <!-- Admin Dashboard (visible after login) -->
+    <div id="admin-dashboard" style="display: none;">
+        <h2>Admin Dashboard</h2>
+        <div id="dashboard-content">
+            <!-- Content will be dynamically injected -->
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
