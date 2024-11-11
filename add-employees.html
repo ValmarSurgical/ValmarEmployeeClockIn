@@ -7,31 +7,62 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav>
+    <div id="navbar">
+        <a href="index.html">Login</a>
         <a href="add-hours.html">Add Hours</a>
-        <a href="add-employees.html">Add/Edit Employees</a>
+        <a href="add-edit-employees.html">Add/Edit Employees</a>
         <a href="run-payroll.html">Run Payroll</a>
-        <a href="index.html" onclick="logout()">Logout</a>
-    </nav>
-
-    <div id="add-employees-page" class="container">
-        <h2>Add/Edit Employees</h2>
-        <table id="employee-table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Position</th>
-                    <th>Company</th>
-                    <th>Active</th>
-                    <th>Hire Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Employee rows will be dynamically loaded -->
-            </tbody>
-        </table>
+        <button onclick="logout()">Logout</button>
     </div>
 
-    <script type="module" src="app.js"></script>
+    <h2>Add/Edit Employees</h2>
+    
+    <!-- Button to show Add Employee form -->
+    <button onclick="showAddEmployeeForm()">Add Employee</button>
+
+    <!-- Add Employee Form (hidden by default) -->
+    <div id="addEmployeeForm" style="display:none;">
+        <h3>New Employee</h3>
+        <form id="employeeForm">
+            <label for="employeeName">Name:</label>
+            <input type="text" id="employeeName" required /><br><br>
+
+            <label for="employeePosition">Position:</label>
+            <input type="text" id="employeePosition" required /><br><br>
+
+            <label for="employeeCompany">Company:</label>
+            <input type="text" id="employeeCompany" required /><br><br>
+
+            <label for="employeeActive">Active:</label>
+            <select id="employeeActive" required>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
+            </select><br><br>
+
+            <label for="employeeHireDate">Hire Date:</label>
+            <input type="date" id="employeeHireDate" /><br><br>
+
+            <button type="button" onclick="addEmployee()">Add Employee</button>
+            <button type="button" onclick="hideAddEmployeeForm()">Cancel</button>
+        </form>
+    </div>
+
+    <h3>Employee List</h3>
+    <table id="employee-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Company</th>
+                <th>Active</th>
+                <th>Hire Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Employee rows will be added here dynamically -->
+        </tbody>
+    </table>
+
+    <script type="module" src="add-employees.js"></script>
 </body>
 </html>
