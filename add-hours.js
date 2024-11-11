@@ -16,24 +16,29 @@ const db = firebase.getFirestore(app);
 async function loadEmployeeAttendance() {
     const employeeTable = document.getElementById("attendance-table").getElementsByTagName("tbody")[0];
     const employeesSnapshot = await firebase.getDocs(firebase.collection(db, "employees"));
-
+    
     employeesSnapshot.forEach((doc) => {
         const employee = doc.data();
+        if (!employee.active) return;  // Skip inactive employees
+
         const row = employeeTable.insertRow();
 
-        // Create editable row with submit button
+        // Check if the employee has clock-in and clock-out data
+        const attendanceData = employee.attendance || {};  // Assuming "attendance" contains clock-in and clock-out data
+
+        // Add the row for each employee
         row.innerHTML = `
             <td>${employee.name}</td>
-            <td><input type="checkbox" name="absent" value="Yes" onchange="toggleClockInOut(this)"></td>
-            <td><input type="time" name="clock-in" onchange="calculateHours(this)"></td>
-            <td><input type="time" name="clock-out" onchange="calculateHours(this)"></td>
-            <td><input type="number" name="total-hours" value="0" onchange="calculateHours(this)" readonly></td>
-            <td><button type="button" onclick="updateRow(this)">Submit</button></td>
+            <td><input type="checkbox" name="absent" value="Yes" ${attendanceData.absent ? 'checked' : ''} onchange="toggleClockInOut(this)"></td>
+            <td><input type="time" name="clock-in" value="${attendanceData.clockIn || ''}" onchange="calculateHours(this)"></td>
+            <td><input type="time" name="clock-out" value="${attendanceData.clockOut || ''}" onchange="calculateHours(this)"></td>
+            <td><input type="number" name="total-hours" value="${attendanceData.totalHours || 0}" readonly></td>
+            <td><button type="button" onclick="updateRow(this)">Update</button></td>
         `;
     });
 }
 
-// Function to calculate total hours (Clock Out - Clock In - 30 minutes)
+// Calculate Total Hours (Clock Out - Clock In - 30 minutes)
 function calculateHours(input) {
     const row = input.closest("tr");
     const clockIn = row.querySelector('[name="clock-in"]').value;
@@ -52,7 +57,7 @@ function calculateHours(input) {
     }
 }
 
-// Function to disable Clock In/Out when Absent is checked
+// Disable Clock In/Out when Absent is checked
 function toggleClockInOut(checkbox) {
     const row = checkbox.closest("tr");
     const clockIn = row.querySelector('[name="clock-in"]');
@@ -67,8 +72,8 @@ function toggleClockInOut(checkbox) {
     }
 }
 
-// Function to update a single row
-function updateRow(button) {
+// Update a single row
+async function updateRow(button) {
     const row = button.closest("tr");
     const name = row.querySelector('td').textContent;
     const absent = row.querySelector('[name="absent"]').checked;
@@ -76,25 +81,41 @@ function updateRow(button) {
     const clockOut = row.querySelector('[name="clock-out"]').value;
     const totalHours = row.querySelector('[name="total-hours"]').value;
 
-    // Perform the update (this is where you would write the code to save the data to Firebase)
-    console.log(`Updating row for ${name}: Absent=${absent}, Clock In=${clockIn}, Clock Out=${clockOut}, Total Hours=${totalHours}`);
-    // Example: save to Firebase (not implemented here)
+    const employeeRef = firebase.doc(db, "employees", name); // Assuming employee names are unique
+    await firebase.updateDoc(employeeRef, {
+        attendance: {
+            absent,
+            clockIn,
+            clockOut,
+            totalHours
+        }
+    });
+
+    console.log(`Updated row for ${name}: Absent=${absent}, Clock In=${clockIn}, Clock Out=${clockOut}, Total Hours=${totalHours}`);
 }
 
-// Function to update all rows at once
-function updateAllRows() {
+// Update all rows at once
+async function updateAllRows() {
     const rows = document.querySelectorAll("#attendance-table tbody tr");
-    rows.forEach(row => {
+    for (let row of rows) {
         const name = row.querySelector('td').textContent;
         const absent = row.querySelector('[name="absent"]').checked;
         const clockIn = row.querySelector('[name="clock-in"]').value;
         const clockOut = row.querySelector('[name="clock-out"]').value;
         const totalHours = row.querySelector('[name="total-hours"]').value;
 
-        // Perform the update for each row
-        console.log(`Updating row for ${name}: Absent=${absent}, Clock In=${clockIn}, Clock Out=${clockOut}, Total Hours=${totalHours}`);
-        // Example: save to Firebase (not implemented here)
-    });
+        const employeeRef = firebase.doc(db, "employees", name); // Assuming employee names are unique
+        await firebase.updateDoc(employeeRef, {
+            attendance: {
+                absent,
+                clockIn,
+                clockOut,
+                totalHours
+            }
+        });
+
+        console.log(`Updated row for ${name}: Absent=${absent}, Clock In=${clockIn}, Clock Out=${clockOut}, Total Hours=${totalHours}`);
+    }
 }
 
 // Initialize the page
