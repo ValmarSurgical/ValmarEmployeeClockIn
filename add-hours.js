@@ -1,8 +1,21 @@
-// Import Firestore and Firebase methods
+// Import the necessary Firebase modules
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
 import { getFirestore, collection, getDocs, doc, updateDoc } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
 
-// Initialize Firestore
-const db = getFirestore();
+// Your Firebase configuration
+const firebaseConfig = {
+    apiKey: "AIzaSyCuQwsqL_sOYHHlzsqUyg-dnTPtNh8Kp1s",
+    authDomain: "employeemanagement-28132.firebaseapp.com",
+    projectId: "employeemanagement-28132",
+    storageBucket: "employeemanagement-28132.appspot.com",
+    messagingSenderId: "20059564448",
+    appId: "1:20059564448:web:c0711f370a68d4eaa89cc5",
+    measurementId: "G-D2S9RGW84N"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig); // Initialize Firebase App
+const db = getFirestore(app); // Initialize Firestore
 
 // Load Employee Attendance
 async function loadEmployeeAttendance() {
