@@ -30,7 +30,13 @@ function signIn() {
     .then((userCredential) => {
       const user = userCredential.user;
       console.log("Signed in as:", user.email);
-      window.location.href = "dashboard.html"; // Or redirect to another page
+
+      // Check if user is admin (example: check if email is admin)
+      if (user.email === "admin@yourcompany.com") { // Replace with your admin email or logic
+        showAdminView(); // Function to show admin's UI
+      } else {
+        showEmployeeView(); // Function to show employee's UI
+      }
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -38,6 +44,20 @@ function signIn() {
       console.log("Error signing in:", errorCode, errorMessage);
       alert("Login failed: " + errorMessage); // Show error message
     });
+}
+
+// Show Admin view
+function showAdminView() {
+  document.getElementById("login-form").style.display = "none";
+  document.getElementById("clock-area").style.display = "none";
+  document.getElementById("admin-area").style.display = "block";
+}
+
+// Show Employee view
+function showEmployeeView() {
+  document.getElementById("login-form").style.display = "none";
+  document.getElementById("clock-area").style.display = "block";
+  document.getElementById("admin-area").style.display = "none";
 }
 
 // Add Employee function (Admin only)
