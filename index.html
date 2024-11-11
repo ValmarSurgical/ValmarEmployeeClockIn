@@ -41,7 +41,94 @@
     </div>
 
     <!-- Include your JavaScript file here -->
-    <script type="module" src="script.js"></script>
+    <script type="module">
+        // Firebase Configuration
+        const firebaseConfig = {
+          apiKey: "AIzaSyCuQwsqL_sOYHHlzsqUyg-dnTPtNh8Kp1s",
+          authDomain: "employeemanagement-28132.firebaseapp.com",
+          projectId: "employeemanagement-28132",
+          storageBucket: "employeemanagement-28132.firebasestorage.app",
+          messagingSenderId: "20059564448",
+          appId: "1:20059564448:web:c0711f370a68d4eaa89cc5",
+          measurementId: "G-D2S9RGW84N"
+        };
+
+        // Initialize Firebase
+        import { initializeApp } from "firebase/app";
+        import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+        import { getFirestore, collection, addDoc, query, where, getDocs, serverTimestamp, doc, updateDoc } from "firebase/firestore";
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Sign In Function
+        document.getElementById('signInButton').addEventListener('click', signIn);
+
+        function signIn() {
+          const email = document.getElementById('emailInput').value;
+          const password = document.getElementById('passwordInput').value;
+
+          signInWithEmailAndPassword(auth, email, password)
+            .then((userCredential) => {
+              const user = userCredential.user;
+              console.log("Signed in as:", user.email);
+              window.location.href = "dashboard.html"; // Or redirect to another page
+            })
+            .catch((error) => {
+              const errorCode = error.code;
+              const errorMessage = error.message;
+              console.log("Error signing in:", errorCode, errorMessage);
+              alert("Login failed: " + errorMessage); // Show error message
+            });
+        }
+
+        // Add Employee function (Admin only)
+        async function addEmployee() {
+          const name = document.getElementById("employee-name-input").value;
+          const email = document.getElementById("employee-email-input").value;
+          const hourlyRate = parseFloat(document.getElementById("employee-rate-input").value);
+          await addDoc(collection(db, "employees"), {
+            name: name,
+            email: email,
+            hourlyRate: hourlyRate
+          });
+          alert("Employee added!");
+        }
+
+        // Clock In/Out function
+        async function clockIn() {
+          const timestamp = serverTimestamp();
+          const userId = auth.currentUser.uid;
+          await addDoc(collection(db, "clockRecords"), {
+            employeeId: userId,
+            clockIn: timestamp,
+            clockOut: null
+          });
+          alert("Clock-in recorded!");
+        }
+
+        async function clockOut() {
+          const userId = auth.currentUser.uid;
+          const clockOutTime = serverTimestamp();
+          const clockRecordQuery = query(
+            collection(db, "clockRecords"),
+            where("employeeId", "==", userId),
+            where("clockOut", "==", null)
+          );
+          const querySnapshot = await getDocs(clockRecordQuery);
+
+          if (!querySnapshot.empty) {
+            const recordId = querySnapshot.docs[0].id;
+            await updateDoc(doc(db, "clockRecords", recordId), {
+              clockOut: clockOutTime
+            });
+            alert("Clock-out recorded!");
+          } else {
+            alert("No clock-in record found.");
+          }
+        }
+    </script>
 
 </body>
 </html>
