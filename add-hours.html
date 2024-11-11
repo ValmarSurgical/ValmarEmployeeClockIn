@@ -5,53 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Hours</title>
     <link rel="stylesheet" href="style.css">
-    
-    <!-- Include Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-app.js';
-        import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-firestore.js';
-        import { getAuth, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/9.18.0/firebase-auth.js';
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyCuQwsqL_sOYHHlzsqUyg-dnTPtNh8Kp1s",
-            authDomain: "employeemanagement-28132.firebaseapp.com",
-            projectId: "employeemanagement-28132",
-            storageBucket: "employeemanagement-28132.firebasestorage.app",
-            messagingSenderId: "20059564448",
-            appId: "1:20059564448:web:c0711f370a68d4eaa89cc5",
-            measurementId: "G-D2S9RGW84N"
-        };
-        
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        
-        // Make Firebase objects available globally for use in your app.js
-        window.firebase = { app, auth, db };
-    </script>
 </head>
 <body>
-
-    <!-- Navbar -->
-    <div id="navbar">
-        <a href="index.html">Login</a>
-        <a href="add-hours.html">Add Hours</a>
-        <a href="add-employees.html">Add/Edit Employees</a>
-        <a href="run-payroll.html">Run Payroll</a>
-    </div>
-
-    <!-- Add Hours Content -->
-    <div class="container">
+    <div id="add-hours-page">
         <h2>Add Hours</h2>
-        
         <label for="date">Date:</label>
-        <input type="date" id="date" name="date" value="" required>
-
-        <!-- Button to update all rows -->
-        <button type="button" onclick="updateAllRows()">Update All</button>
-
-        <!-- Employee Attendance Table -->
+        <input type="date" id="date" name="date" />
         <table id="attendance-table">
             <thead>
                 <tr>
@@ -63,13 +22,12 @@
                     <th>Update</th>
                 </tr>
             </thead>
-            <tbody>
-                <!-- Rows will be dynamically added by JavaScript -->
-            </tbody>
+            <tbody></tbody>
         </table>
+        <button type="button" onclick="updateAllRows()">Update All</button>
     </div>
 
+    <!-- Import your app.js script as a module -->
     <script type="module" src="add-hours.js"></script>
-
 </body>
 </html>
