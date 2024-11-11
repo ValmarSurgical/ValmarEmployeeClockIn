@@ -1,11 +1,9 @@
-// Import the functions you need from the SDKs you need
+// Import the functions you need from the Firebase SDK
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getFirestore, collection, addDoc, query, where, getDocs, serverTimestamp, doc, updateDoc } from "firebase/firestore";
 
 // Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyCuQwsqL_sOYHHlzsqUyg-dnTPtNh8Kp1s",
   authDomain: "employeemanagement-28132.firebaseapp.com",
@@ -18,21 +16,18 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
+const auth = getAuth(app); // Firebase Authentication instance
+const db = getFirestore(app); // Firestore instance
 
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
-const auth = firebase.auth();
-
+// Sign-in function
 document.getElementById('signInButton').addEventListener('click', signIn);
 
 function signIn() {
   const email = document.getElementById('emailInput').value;
   const password = document.getElementById('passwordInput').value;
 
-  // Firebase sign-in
-  firebase.auth().signInWithEmailAndPassword(email, password)
+  // Firebase sign-in (v9 syntax)
+  signInWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       // Signed in
       const user = userCredential.user;
@@ -48,85 +43,75 @@ function signIn() {
     });
 }
 
-
-function signOut() {
-    auth.signOut().then(() => {
-        document.getElementById("login-form").style.display = "block";
-        document.getElementById("clock-area").style.display = "none";
-        document.getElementById("admin-area").style.display = "none";
-    });
-}
-
-// Show clock area for employees
-function displayClockArea() {
-    document.getElementById("login-form").style.display = "none";
-    document.getElementById("clock-area").style.display = "block";
-}
-
-// Clock-In/Out functions
+// Clock In function
 async function clockIn() {
-    const timestamp = firebase.firestore.FieldValue.serverTimestamp();
-    const userId = auth.currentUser.uid;
-    await db.collection("clockRecords").add({
-        employeeId: userId,
-        clockIn: timestamp,
-        clockOut: null
-    });
-    alert("Clock-in recorded!");
+  const timestamp = serverTimestamp();
+  const userId = auth.currentUser.uid;
+  await addDoc(collection(db, "clockRecords"), {
+    employeeId: userId,
+    clockIn: timestamp,
+    clockOut: null
+  });
+  alert("Clock-in recorded!");
 }
 
+// Clock Out function
 async function clockOut() {
-    const userId = auth.currentUser.uid;
-    const clockOutTime = firebase.firestore.FieldValue.serverTimestamp();
-    const clockRecord = await db.collection("clockRecords")
-        .where("employeeId", "==", userId)
-        .where("clockOut", "==", null)
-        .limit(1)
-        .get();
+  const userId = auth.currentUser.uid;
+  const clockOutTime = serverTimestamp();
+  const clockRecordQuery = query(
+    collection(db, "clockRecords"),
+    where("employeeId", "==", userId),
+    where("clockOut", "==", null)
+  );
+  const querySnapshot = await getDocs(clockRecordQuery);
 
-    if (!clockRecord.empty) {
-        const recordId = clockRecord.docs[0].id;
-        await db.collection("clockRecords").doc(recordId).update({
-            clockOut: clockOutTime
-        });
-        alert("Clock-out recorded!");
-    } else {
-        alert("No clock-in record found.");
-    }
+  if (!querySnapshot.empty) {
+    const recordId = querySnapshot.docs[0].id;
+    await updateDoc(doc(db, "clockRecords", recordId), {
+      clockOut: clockOutTime
+    });
+    alert("Clock-out recorded!");
+  } else {
+    alert("No clock-in record found.");
+  }
 }
 
-// Admin functions
+// Add Employee function (Admin only)
 async function addEmployee() {
-    const name = document.getElementById("employee-name-input").value;
-    const email = document.getElementById("employee-email-input").value;
-    const hourlyRate = parseFloat(document.getElementById("employee-rate-input").value);
-    await db.collection("employees").add({
-        name: name,
-        email: email,
-        hourlyRate: hourlyRate
-    });
-    alert("Employee added!");
+  const name = document.getElementById("employee-name-input").value;
+  const email = document.getElementById("employee-email-input").value;
+  const hourlyRate = parseFloat(document.getElementById("employee-rate-input").value);
+  await addDoc(collection(db, "employees"), {
+    name: name,
+    email: email,
+    hourlyRate: hourlyRate
+  });
+  alert("Employee added!");
 }
 
+// Calculate Payroll function (Admin only)
 async function calculatePayroll() {
-    const employeeId = document.getElementById("payroll-employee-id").value;
-    const records = await db.collection("clockRecords")
-        .where("employeeId", "==", employeeId)
-        .where("clockOut", "!=", null)
-        .get();
+  const employeeId = document.getElementById("payroll-employee-id").value;
+  const records = await getDocs(query(
+    collection(db, "clockRecords"),
+    where("employeeId", "==", employeeId),
+    where("clockOut", "!=", null)
+  ));
 
-    let totalHours = 0;
+  let totalHours = 0;
 
-    records.forEach((record) => {
-        const clockIn = record.data().clockIn.toDate();
-        const clockOut = record.data().clockOut.toDate();
-        const hoursWorked = (clockOut - clockIn) / (1000 * 60 * 60);
-        totalHours += hoursWorked;
-    });
+  records.forEach((record) => {
+    const clockIn = record.data().clockIn.toDate();
+    const clockOut = record.data().clockOut.toDate();
+    const hoursWorked = (clockOut - clockIn) / (1000 * 60 * 60); // Convert ms to hours
+    totalHours += hoursWorked;
+  });
 
-    const employee = await db.collection("employees").doc(employeeId).get();
-    const hourlyRate = employee.data().hourlyRate;
-    const weeklyPay = totalHours * hourlyRate;
+  const employee = await doc(db, "employees", employeeId).get();
+  const hourlyRate = employee.data().hourlyRate;
+  const weeklyPay = totalHours * hourlyRate;
 
-    alert(`Weekly payroll for ${employee.data().name}: $${weeklyPay.toFixed(2)}`);
+  alert(`Weekly payroll for ${employee.data().name}: $${weeklyPay.toFixed(2)}`);
 }
+
