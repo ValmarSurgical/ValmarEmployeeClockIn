@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Hours</title>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav>
+        <a href="add-hours.html">Add Hours</a> |
+        <a href="add-edit-employees.html">Add/Edit Employees</a> |
+        <a href="run-payroll.html">Run Payroll</a>
+    </nav>
+
+    <h2>Employee Clock-In/Out</h2>
+    <!-- Content for adding hours -->
+    <div id="dashboard-content"></div>
+
+    <!-- Import Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
+
+    <script type="module" src="add-hours.js"></script>
+</body>
+</html>
