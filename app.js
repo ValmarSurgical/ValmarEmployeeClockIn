@@ -12,7 +12,7 @@ const firebaseConfig = {
 // Import Firebase SDK v9+ using ES Modules
 import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
 import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";
-import { getFirestore, collection, addDoc, query, where, getDocs, serverTimestamp, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
+import { getFirestore, collection, addDoc, getDocs, serverTimestamp, doc, updateDoc } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js";
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -74,13 +74,6 @@ function loadDashboard() {
   `;
   dashboardContent.appendChild(table);
   loadEmployeeAttendance();
-
-  // Add functionality to calculate total hours when clock-in/clock-out is changed
-  document.getElementById("attendance-table").addEventListener("input", (event) => {
-    if (event.target.name === "clock-in" || event.target.name === "clock-out") {
-      calculateTotalHours(event.target);
-    }
-  });
 }
 
 // Load Employee Attendance
@@ -102,28 +95,43 @@ async function loadEmployeeAttendance() {
   });
 }
 
-// Calculate Total Hours (clock-in/clock-out)
-function calculateTotalHours(target) {
-  const row = target.closest('tr');
-  const clockInInput = row.querySelector('input[name="clock-in"]');
-  const clockOutInput = row.querySelector('input[name="clock-out"]');
-  const totalHoursInput = row.querySelector('input[name="total-hours"]');
+// Navigate to Add/Edit Employees Screen
+document.getElementById('goToAddEditEmployees').addEventListener('click', function() {
+  document.getElementById("admin-dashboard").style.display = "none";
+  document.getElementById("employee-management").style.display = "block";
+  loadEmployeeManagement();
+});
 
-  if (clockInInput.value && clockOutInput.value) {
-    const clockIn = new Date(`1970-01-01T${clockInInput.value}:00`);
-    const clockOut = new Date(`1970-01-01T${clockOutInput.value}:00`);
-    
-    let totalHours = (clockOut - clockIn) / (1000 * 60 * 60); // Convert milliseconds to hours
-    
-    if (totalHours < 0) {
-      totalHours += 24; // Handle if clock-out is after midnight
-    }
-    
-    totalHours -= 0.5; // Subtract 30 minutes for lunch
-    totalHoursInput.value = totalHours.toFixed(2); // Set total hours (rounded to 2 decimals)
-  } else {
-    totalHoursInput.value = 0;
-  }
+// Navigate to Payroll Screen
+document.getElementById('goToPayroll').addEventListener('click', function() {
+  document.getElementById("admin-dashboard").style.display = "none";
+  document.getElementById("payroll").style.display = "block";
+});
+
+// Go Back to Dashboard from Employee Management
+document.getElementById('backToDashboardFromEmployee').addEventListener('click', function() {
+  document.getElementById("employee-management").style.display = "none";
+  document.getElementById("admin-dashboard").style.display = "block";
+});
+
+// Go Back to Dashboard from Payroll
+document.getElementById('backToDashboardFromPayroll').addEventListener('click', function() {
+  document.getElementById("payroll").style.display = "none";
+  document.getElementById("admin-dashboard").style.display = "block";
+});
+
+// Load Employee Management (Add/Edit Employees)
+function loadEmployeeManagement() {
+  const employeeTable = document.getElementById("employee-table").getElementsByTagName("tbody")[0];
+  // Here you can add functionality to display, edit, or add employees.
+  // (This would require getting data from Firestore and updating/additional inputs to create/edit employees.)
 }
 
-// Admin features (Add/Edit employee, Payroll, etc.) will be added below
+// Payroll functionality (To be added in future, handle form submission for payroll generation)
+document.getElementById('payroll-form').addEventListener('submit', function(event) {
+  event.preventDefault();
+  const fromDate = document.getElementById('fromDate').value;
+  const toDate = document.getElementById('toDate').value;
+  console.log("Generating payroll for", fromDate, "to", toDate);
+  // Add the payroll generation logic here (e.g., calculate total hours for the given date range)
+});
