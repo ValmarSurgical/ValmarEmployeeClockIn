@@ -4,24 +4,35 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Hours</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Navigation Bar -->
     <nav>
-        <a href="add-hours.html">Add Hours</a> |
-        <a href="add-edit-employees.html">Add/Edit Employees</a> |
+        <a href="add-hours.html">Add Hours</a>
+        <a href="add-employees.html">Add/Edit Employees</a>
         <a href="run-payroll.html">Run Payroll</a>
+        <a href="index.html" onclick="logout()">Logout</a>
     </nav>
 
-    <h2>Employee Clock-In/Out</h2>
-    <!-- Content for adding hours -->
-    <div id="dashboard-content"></div>
+    <div id="add-hours-page" class="container">
+        <h2>Employee Clock-In/Out</h2>
+        <input type="date" id="dateField" />
+        <table id="attendance-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Absent</th>
+                    <th>Clock In</th>
+                    <th>Clock Out</th>
+                    <th>Total Hours</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Employee rows will be dynamically loaded -->
+            </tbody>
+        </table>
+    </div>
 
-    <!-- Import Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-
-    <script type="module" src="add-hours.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
