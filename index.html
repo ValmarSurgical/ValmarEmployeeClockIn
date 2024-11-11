@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login</title>
     <link rel="stylesheet" href="style.css">
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-app.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-auth.js" type="module"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.20.0/firebase-firestore.js" type="module"></script>
+
 </head>
 <body>
     <div id="login-page" class="container">
@@ -18,9 +24,7 @@
         <button onclick="login()">Sign In</button>
     </div>
 
-    <script type="module" src="app.js"></script>
-    <script>
-        // Firebase Authentication and login functionality are handled in app.js
-    </script>
+    <script type="module" src="app.js"></script> <!-- Your custom app.js -->
+
 </body>
 </html>
