@@ -25,17 +25,29 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
 
-// Authentication functions
-async function signIn() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    try {
-        await auth.signInWithEmailAndPassword(email, password);
-        displayClockArea();
-    } catch (error) {
-        console.error("Error signing in:", error);
-    }
+document.getElementById('signInButton').addEventListener('click', signIn);
+
+function signIn() {
+  const email = document.getElementById('emailInput').value;
+  const password = document.getElementById('passwordInput').value;
+
+  // Firebase sign-in
+  firebase.auth().signInWithEmailAndPassword(email, password)
+    .then((userCredential) => {
+      // Signed in
+      const user = userCredential.user;
+      console.log("Signed in as:", user.email);
+      // Redirect or show logged-in UI
+      window.location.href = "dashboard.html"; // or another page
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log("Error signing in:", errorCode, errorMessage);
+      alert("Login failed: " + errorMessage); // Show error message
+    });
 }
+
 
 function signOut() {
     auth.signOut().then(() => {
