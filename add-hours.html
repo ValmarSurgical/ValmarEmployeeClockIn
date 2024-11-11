@@ -7,32 +7,35 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <nav>
+    <div id="navbar">
+        <a href="index.html">Login</a>
         <a href="add-hours.html">Add Hours</a>
-        <a href="add-employees.html">Add/Edit Employees</a>
+        <a href="add-edit-employees.html">Add/Edit Employees</a>
         <a href="run-payroll.html">Run Payroll</a>
-        <a href="index.html" onclick="logout()">Logout</a>
-    </nav>
-
-    <div id="add-hours-page" class="container">
-        <h2>Employee Clock-In/Out</h2>
-        <input type="date" id="dateField" />
-        <table id="attendance-table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Absent</th>
-                    <th>Clock In</th>
-                    <th>Clock Out</th>
-                    <th>Total Hours</th>
-                </tr>
-            </thead>
-            <tbody>
-                <!-- Employee rows will be dynamically loaded -->
-            </tbody>
-        </table>
+        <button onclick="logout()">Logout</button>
     </div>
 
-    <script type="module" src="app.js"></script>
+    <h2>Add Hours</h2>
+    
+    <!-- Date Picker (Pre-populated with today's date) -->
+    <input type="date" id="dateInput" />
+
+    <h3>Employee Attendance</h3>
+    <table id="attendance-table">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Absent</th>
+                <th>Clock In</th>
+                <th>Clock Out</th>
+                <th>Total Hours</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Employee rows will be inserted here dynamically -->
+        </tbody>
+    </table>
+
+    <script type="module" src="add-hours.js"></script>
 </body>
 </html>
