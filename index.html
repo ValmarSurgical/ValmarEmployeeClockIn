@@ -3,45 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Employee Clock-In and Payroll System</title>
-    <link rel="stylesheet" href="style.css">
-    <script defer src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
-    <script defer src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
-    <script defer src="script.js"></script>
+    <title>Employee Management</title>
+    <!-- Include Firebase CDN Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Employee Clock-In and Payroll System</h1>
-        
-        <!-- Login Form -->
-        <div id="login-form">
-            <h2>Employee Login</h2>
-            <input type="email" id="emailInput" placeholder="Enter your email">
-            <input type="password" id="passwordInput" placeholder="Enter your password">
-            <button id="signInButton">Sign In</button>
-        </div>
 
-        <!-- Clock-In/Out Area -->
-        <div id="clock-area" style="display: none;">
-            <h2>Welcome, <span id="employee-name"></span></h2>
-            <button onclick="clockIn()">Clock In</button>
-            <button onclick="clockOut()">Clock Out</button>
-            <button onclick="signOut()">Sign Out</button>
-        </div>
-
-        <!-- Admin Area -->
-        <div id="admin-area" style="display: none;">
-            <h2>Admin Panel</h2>
-            <input type="text" id="employee-name-input" placeholder="Employee Name">
-            <input type="email" id="employee-email-input" placeholder="Employee Email">
-            <input type="number" id="employee-rate-input" placeholder="Hourly Rate">
-            <button onclick="addEmployee()">Add Employee</button>
-
-            <h3>Payroll Calculation</h3>
-            <input type="text" id="payroll-employee-id" placeholder="Employee ID">
-            <button onclick="calculatePayroll()">Calculate Payroll</button>
-        </div>
+    <!-- Login Form -->
+    <div id="login-form">
+        <h2>Login</h2>
+        <input type="email" id="emailInput" placeholder="Enter your email">
+        <input type="password" id="passwordInput" placeholder="Enter your password">
+        <button id="signInButton">Sign In</button>
     </div>
+
+    <!-- Clock-in / Clock-out Area (visible after login) -->
+    <div id="clock-area" style="display: none;">
+        <h3>Clock-in / Clock-out</h3>
+        <button onclick="clockIn()">Clock In</button>
+        <button onclick="clockOut()">Clock Out</button>
+    </div>
+
+    <!-- Admin Area (visible to admin users only) -->
+    <div id="admin-area" style="display: none;">
+        <h3>Add Employee</h3>
+        <input type="text" id="employee-name-input" placeholder="Employee Name">
+        <input type="email" id="employee-email-input" placeholder="Employee Email">
+        <input type="number" id="employee-rate-input" placeholder="Hourly Rate">
+        <button onclick="addEmployee()">Add Employee</button>
+
+        <h3>Calculate Payroll</h3>
+        <input type="text" id="payroll-employee-id" placeholder="Employee ID">
+        <button onclick="calculatePayroll()">Calculate Payroll</button>
+    </div>
+
+    <!-- Include your JavaScript file here -->
+    <script type="module" src="script.js"></script>
+
 </body>
 </html>
