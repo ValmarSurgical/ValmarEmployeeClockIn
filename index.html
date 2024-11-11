@@ -21,10 +21,13 @@
         <div class="form-group">
             <input type="password" id="passwordInput" placeholder="Password" required />
         </div>
-        <button onclick="login()">Sign In</button>
+        <button id="signInButton">Sign In</button>
     </div>
 
-    <script type="module" src="app.js"></script> <!-- Your custom app.js -->
-
+    <script type="module" src="app.js"></script>
+    <script>
+        // Attach the login function to the button click event
+        document.getElementById('signInButton').addEventListener('click', login);
+    </script>
 </body>
 </html>
