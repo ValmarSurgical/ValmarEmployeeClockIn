@@ -89,4 +89,17 @@ function generatePayroll() {
                 </tr>
                 <tr>
                     <td>Jane Smith</td>
-                    <td>
+                    <td>38</td>
+                </tr>
+            </tbody>
+        </table>
+    `;
+    document.getElementById('payroll-results').innerHTML = payrollResults;
+}
+
+// Logout function to return to the login page
+function logout() {
+    firebase.signOut(auth).then(() => {
+        window.location.href = 'index.html'; // Redirect to login page
+    });
+}
